@@ -2,12 +2,12 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { create, index, show, update, destroy } from './controller'
+import { create, index, show, update, destroy, getProducts } from './controller'
 import { schema } from './model'
 export Product, { schema } from './model'
 
 const router = new Router()
-const { name, pictures, description, isShown, category, tags, stock, bajoPedido } = schema.tree
+const { name, pictures, description, isShown, category, tags, stock, bajoPedido, price, indexPictures } = schema.tree
 
 /**
  * @api {post} /products Create product
@@ -30,7 +30,7 @@ const { name, pictures, description, isShown, category, tags, stock, bajoPedido 
  */
 router.post('/',
   token({ required: true, roles: ['admin'] }),
-  body({ name, pictures, description, isShown, category, tags, stock, bajoPedido }),
+  body({ name, pictures, description, isShown, category, tags, stock, bajoPedido, price, indexPictures }),
   create)
 
 /**
@@ -44,6 +44,18 @@ router.post('/',
 router.get('/',
   query(),
   index)
+
+/**
+ * @api {get} /products Retrieve products
+ * @apiName RetrieveProducts
+ * @apiGroup Product
+ * @apiUse listParams
+ * @apiSuccess {Object[]} products List of products.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ */
+router.get('/getProducts',
+  query(),
+  getProducts)
 
 /**
  * @api {get} /products/:id Retrieve product
@@ -77,7 +89,7 @@ router.get('/:id',
  */
 router.put('/:id',
   token({ required: true, roles: ['admin'] }),
-  body({ name, pictures, description, isShown, category, tags, stock, bajoPedido }),
+  body({ name, pictures, description, isShown, category, tags, stock, bajoPedido, price, indexPictures }),
   update)
 
 /**
