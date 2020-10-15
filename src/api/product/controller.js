@@ -34,3 +34,9 @@ export const destroy = ({ params }, res, next) =>
     .then((product) => product ? product.remove() : null)
     .then(success(res, 204))
     .catch(next)
+
+export const getProducts = ({ querymen: { query, select, cursor } }, res, next) =>
+  Product.find({ 'isShown': true })
+  .then((products) => products.map((product) => product.view()))
+  .then(success(res))
+  .catch(next)

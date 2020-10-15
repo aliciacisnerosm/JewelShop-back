@@ -8,7 +8,7 @@ const productSchema = new Schema({
   pictures: [{
     src: {
       type: String,
-      default: 'https://i.imgur.com/GMZA8By.jpg'
+      default: 'https://i.pinimg.com/originals/06/7e/f9/067ef929f34b75d61f7e492b0f0ec387.jpg'
     },
     extension: {
       type: String,
@@ -22,8 +22,7 @@ const productSchema = new Schema({
     type: Boolean
   },
   category: {
-    type: Schema.ObjectId,
-    ref: 'Category'
+    type: String
   },
   tags: [String],
   stock: {
@@ -31,6 +30,13 @@ const productSchema = new Schema({
   },
   bajoPedido: {
     type: Boolean
+  },
+  price: {
+    type: Number
+  },
+  indexPictures: {
+    type: Number,
+    default: 0
   }
 }, {
   timestamps: true,
@@ -53,6 +59,8 @@ productSchema.methods = {
       tags: this.tags,
       stock: this.stock,
       bajoPedido: this.bajoPedido,
+      price: this.price,
+      indexPictures: this.indexPictures,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     }
