@@ -1,12 +1,13 @@
 import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
-import { create, index, show, update, destroy } from './controller'
+import { token } from '../../services/passport'
+import { create, index, show, showOrdersByUser, update, destroy, calculatePrice } from './controller'
 import { schema } from './model'
 export Order, { schema } from './model'
 
 const router = new Router()
-const { type, subtotal, shippingInfo, shippingCost, items, isHidden, createdBy } = schema.tree
+const { type, subtotal, total, shippingInfo, shippingCost, items, totalQuantity, isHidden, ipn, stripeSession, stripeIntent, stripeEvent, createdBy } = schema.tree
 
 /**
  * @api {post} /orders Create order
@@ -23,7 +24,8 @@ const { type, subtotal, shippingInfo, shippingCost, items, isHidden, createdBy }
  * @apiError 404 Order not found.
  */
 router.post('/',
-  body({ type, subtotal, shippingInfo, shippingCost, items, isHidden, createdBy }),
+  token({ required: true }),
+  body({ type, subtotal, total, shippingInfo, shippingCost, items, totalQuantity, isHidden, createdBy }),
   create)
 
 /**
@@ -35,6 +37,7 @@ router.post('/',
  * @apiError {Object} 400 Some parameters may contain invalid values.
  */
 router.get('/',
+  token({ required: true, roles: ['admin'] }),
   query(),
   index)
 
@@ -47,7 +50,28 @@ router.get('/',
  * @apiError 404 Order not found.
  */
 router.get('/:id',
+  token({ required: true, roles: ['admin', 'user'] }),
   show)
+
+/**
+ * @api {get} /orders/:userId Retrieve orders by userId
+ * @apiName RetrieveOrdersByUserId
+ * @apiGroup Order
+ * @apiPermission user
+ * @apiParam {String} access_token user access token.
+ * @apiSuccess {Object} order Order's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Order not found.
+ * @apiError 401 user access only.
+ */
+router.get('/getOrdersByUser/:userId',
+  token({ required: true, roles: ['admin', 'user'] }),
+  showOrdersByUser)
+
+// Get order true price
+router.get('/price/:id',
+  token({ required: true }),
+  calculatePrice)
 
 /**
  * @api {put} /orders/:id Update order
@@ -64,7 +88,8 @@ router.get('/:id',
  * @apiError 404 Order not found.
  */
 router.put('/:id',
-  body({ type, subtotal, shippingInfo, shippingCost, items, isHidden, createdBy }),
+  token({ required: true, roles: ['admin'] }),
+  body({ type, subtotal, total, shippingInfo, shippingCost, items, totalQuantity, isHidden, createdBy }),
   update)
 
 /**
