@@ -2,12 +2,12 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { create, index, show, update, destroy, getProducts } from './controller'
+import { create, index, show, update, destroy, getProducts, getRecommended, getCart } from './controller'
 import { schema } from './model'
 export Product, { schema } from './model'
 
 const router = new Router()
-const { name, pictures, description, isShown, category, tags, stock, bajoPedido, price, indexPictures } = schema.tree
+const { name, pictures, description, isShown, category, tags, bajoPedido, variations, indexPictures } = schema.tree
 
 /**
  * @api {post} /products Create product
@@ -30,7 +30,7 @@ const { name, pictures, description, isShown, category, tags, stock, bajoPedido,
  */
 router.post('/',
   token({ required: true, roles: ['admin'] }),
-  body({ name, pictures, description, isShown, category, tags, stock, bajoPedido, price, indexPictures }),
+  body({ name, pictures, description, isShown, category, tags, bajoPedido, variations, indexPictures }),
   create)
 
 /**
@@ -69,6 +69,31 @@ router.get('/:id',
   show)
 
 /**
+ * @api {get} /products/recommended/:id/:category Retrieve product's recommended
+ * @apiName RetrieveProduct
+ * @apiParam id Product's id.
+ * @apiParam category Product's category.
+ * @apiGroup Product
+ * @apiSuccess {Object} product Product's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Product not found.
+ */
+router.get('/recommended/:id/:category',
+  getRecommended)
+
+/**
+* @api {get} /products/getCark Retrieve product's from cart
+* @apiName getCart
+* @apiGroup Product
+* @apiSuccess {Object} product Product's data.
+* @apiError {Object} 400 Some parameters may contain invalid values.
+* @apiError 404 Product not found.
+*/
+router.post('/getCart',
+  body({}),
+  getCart)
+
+/**
  * @api {put} /products/:id Update product
  * @apiName UpdateProduct
  * @apiGroup Product
@@ -89,7 +114,7 @@ router.get('/:id',
  */
 router.put('/:id',
   token({ required: true, roles: ['admin'] }),
-  body({ name, pictures, description, isShown, category, tags, stock, bajoPedido, price, indexPictures }),
+  body({ name, pictures, description, isShown, category, tags, bajoPedido, variations, indexPictures }),
   update)
 
 /**

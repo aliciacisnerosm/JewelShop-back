@@ -11,6 +11,9 @@ const orderSchema = new Schema({
   subtotal: {
     type: Number
   },
+  total: {
+    type: Number
+  },
   shippingInfo: {
     firstName: String,
     lastName: String,
@@ -30,11 +33,36 @@ const orderSchema = new Schema({
       ref: 'Product',
       required: true
     },
+    variation: {
+      type: Schema.ObjectId,
+      ref: 'Variation',
+      required: true
+    },
     price: Number,
-    quantity: Number
+    quantity: Number,
+    typeProduct: String
   }],
+  totalQuantity: {
+    type: Number
+  },
   isHidden: {
     type: Boolean
+  },
+  ipn: {
+    type: Schema.ObjectId,
+    ref: 'Ipn',
+    default: null
+  },
+  stripeSession: {
+    type: String
+  },
+  stripeIntent: {
+    type: String
+  },
+  stripeEvent: {
+    type: Schema.ObjectId,
+    ref: 'Stripe-event',
+    default: null
   }
 }, {
   timestamps: true,
@@ -51,10 +79,16 @@ orderSchema.methods = {
       id: this.id,
       type: this.type,
       subtotal: this.subtotal,
+      total: this.total,
       shippingInfo: this.shippingInfo,
       shippingCost: this.shippingCost,
       items: this.items,
+      totalQuantity: this.totalQuantity,
       isHidden: this.isHidden,
+      ipn: this.ipn,
+      stripeSession: this.stripeSession,
+      stripeIntent: this.stripeIntent,
+      stripeEvent: this.stripeEvent,
       createdBy: this.createdBy,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt

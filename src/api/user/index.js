@@ -2,12 +2,12 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { password as passwordAuth, master, token } from '../../services/passport'
-import { index, showMe, show, create, update, updatePassword, destroy } from './controller'
+import { index, showMe, show, showAddresses, showDefaultAddress, create, update, updateAddresses, updatePassword, destroy } from './controller'
 import { schema } from './model'
 export User, { schema } from './model'
 
 const router = new Router()
-const { email, password, name, picture, role } = schema.tree
+const { email, password, name, picture, role, addresses } = schema.tree
 
 /**
  * @api {get} /users Retrieve users
@@ -49,6 +49,30 @@ router.get('/:id',
   show)
 
 /**
+ * @api {get} /users/:id Retrieve user's addresses
+ * @apiName RetrieveUser
+ * @apiGroup User
+ * @apiPermission public
+ * @apiSuccess {Object} user User's data.
+ * @apiError 404 User not found.
+ */
+router.get('/getAddresses/:id',
+  token({ required: true }),
+  showAddresses)
+
+/**
+ * @api {get} /users/:id Retrieve user's default address
+ * @apiName RetrieveUser
+ * @apiGroup User
+ * @apiPermission public
+ * @apiSuccess {Object} user User's data.
+ * @apiError 404 User not found.
+ */
+router.get('/getDefaultAddress/:id',
+  token({ required: true }),
+  showDefaultAddress)
+
+/**
  * @api {post} /users Create user
  * @apiName CreateUser
  * @apiGroup User
@@ -83,8 +107,25 @@ router.post('/',
  */
 router.put('/:id',
   token({ required: true }),
-  body({ name, picture }),
+  body({ name }),
   update)
+
+/**
+ * @api {put} /users/:id Update user
+ * @apiName UpdateUserAddresses
+ * @apiGroup User
+ * @apiPermission user
+ * @apiParam {String} access_token User access_token.
+ * @apiParam {String} [addresses] User's addresses.
+ * @apiSuccess {Object} user User's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 401 Current user or admin access only.
+ * @apiError 404 User not found.
+ */
+router.put('/updateAddresses/:id',
+  token({ required: true }),
+  body({ addresses }),
+  updateAddresses)
 
 /**
  * @api {put} /users/:id/password Update password
