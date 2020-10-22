@@ -41,7 +41,7 @@ const config = {
   test: { },
   development: {
     mongo: {
-      uri: 'mongodb://localhost/jewelshop-back-dev',
+      uri: process.env.MONGODB_URI, //'mongodb://localhost/jewelshop-back-dev',
       options: {
         debug: true
       }
@@ -51,7 +51,7 @@ const config = {
     ip: process.env.IP || undefined,
     port: process.env.PORT || 8080,
     mongo: {
-      uri: process.env.MONGODB_URI || 'mongodb://localhost/jewelshop-back'
+      uri: process.env.MONGODB_URI
     }
   }
 }
