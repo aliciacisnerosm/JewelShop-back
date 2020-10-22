@@ -23,25 +23,18 @@ const config = {
   all: {
     env: process.env.NODE_ENV || 'development',
     root: path.join(__dirname, '..'),
-    port: process.env.PORT || 9000,
+    port: process.env.PORT || 8080,
     ip: process.env.IP || '0.0.0.0',
     apiRoot: process.env.API_ROOT || '',
     defaultEmail: 'no-reply@jewelshop-back.com',
     sendgridKey: requireProcessEnv('SENDGRID_KEY'),
     masterKey: requireProcessEnv('MASTER_KEY'),
-    jwtSecret: requireProcessEnv('JWT_SECRET'),
-    mongo: {
-      options: {
-        db: {
-          safe: true
-        }
-      }
-    }
+    jwtSecret: requireProcessEnv('JWT_SECRET')
   },
   test: { },
   development: {
     mongo: {
-      uri: process.env.MONGODB_URI, //'mongodb://localhost/jewelshop-back-dev',
+      uri: 'mongodb+srv://admin:admin@cluster0-stprz.mongodb.net/jewelshop-back?retryWrites=true&w=majority', //'mongodb://localhost/jewelshop-back-dev',
       options: {
         debug: true
       }
@@ -51,7 +44,7 @@ const config = {
     ip: process.env.IP || undefined,
     port: process.env.PORT || 8080,
     mongo: {
-      uri: process.env.MONGODB_URI
+      uri: process.env.MONGODB_URI || 'mongodb+srv://admin:admin@cluster0-stprz.mongodb.net/jewelshop-back?retryWrites=true&w=majority'
     }
   }
 }
