@@ -25,15 +25,16 @@ const productSchema = new Schema({
     type: String
   },
   tags: [String],
-  stock: {
-    type: Number
-  },
   bajoPedido: {
     type: Boolean
   },
-  price: {
-    type: Number
-  },
+  variations: [{
+    typeProduct: String,
+    unit: String,
+    price: Number,
+    discount: Number,
+    stock: Number
+  }],
   indexPictures: {
     type: Number,
     default: 0
@@ -57,9 +58,8 @@ productSchema.methods = {
       isShown: this.isShown,
       category: this.category,
       tags: this.tags,
-      stock: this.stock,
       bajoPedido: this.bajoPedido,
-      price: this.price,
+      variations: this.variations,
       indexPictures: this.indexPictures,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt

@@ -40,3 +40,18 @@ export const getProducts = ({ querymen: { query, select, cursor } }, res, next) 
   .then((products) => products.map((product) => product.view()))
   .then(success(res))
   .catch(next)
+
+export const getRecommended = ({ params }, res, next) =>
+  Product.find({ '_id': { $ne: params.id }, 'category': params.category })
+    .limit(4)
+    .then(notFound(res))
+    .then((products) => products.map((product) => product.view()))
+    .then(success(res))
+    .catch(next)
+
+export const getCart = ({ bodymen: { body } }, res, next) =>
+  Product.find({'_id': { $in: res.req.body }})
+    .then(notFound(res))
+    .then((products) => products.map((product) => product.view()))
+    .then(success(res))
+    .catch(next)

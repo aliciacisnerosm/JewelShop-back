@@ -15,30 +15,73 @@ export const show = ({ params }, res, next) =>
     .then(success(res))
     .catch(next)
 
+export const showAddresses = ({ params }, res, next) =>
+  User.findById(params.id)
+    .then(notFound(res))
+    .then((user) => user ? user.addresses : null)
+    .then(success(res))
+    .catch(next)
+
+export const showDefaultAddress = ({ params }, res, next) =>
+  User.findById(params.id)
+    .then(notFound(res))
+    .then((user) => {
+      var result = {}
+      user.addresses.forEach(address => {
+        if (address.default === true) {
+          result = address
+        }
+      })
+      return result
+    })
+    .then(success(res))
+    .catch(next)
+
 export const showMe = ({ user }, res) =>
   res.json(user.view(true))
 
 export const create = ({ bodymen: { body } }, res, next) =>
   User.create(body)
-  .then(user => {
-    sign(user.id)
-      .then((token) => ({ token, user: user.view(true) }))
-      .then(success(res, 201))
-  })
-  .catch((err) => {
-    /* istanbul ignore else */
-    if (err.name === 'MongoError' && err.code === 11000) {
-      res.status(409).json({
-        valid: false,
-        param: 'email',
-        message: 'email already registered'
-      })
-    } else {
-      next(err)
-    }
-  })
+    .then(user => {
+      sign(user.id)
+        .then((token) => ({ token, user: user.view(true) }))
+        .then(success(res, 201))
+    })
+    .catch((err) => {
+      /* istanbul ignore else */
+      if (err.name === 'MongoError' && err.code === 11000) {
+        res.status(409).json({
+          valid: false,
+          param: 'email',
+          message: 'email already registered'
+        })
+      } else {
+        next(err)
+      }
+    })
 
 export const update = ({ bodymen: { body }, params, user }, res, next) =>
+  User.findById(params.id === 'me' ? user.id : params.id)
+    .then(notFound(res))
+    .then((result) => {
+      if (!result) return null
+      const isAdmin = user.role === 'admin'
+      const isSelfUpdate = user.id === result.id
+      if (!isSelfUpdate && !isAdmin) {
+        res.status(401).json({
+          valid: false,
+          message: 'You can\'t change other user\'s data'
+        })
+        return null
+      }
+      return result
+    })
+    .then((user) => user ? Object.assign(user, body).save() : null)
+    .then((user) => user ? user.view(true) : null)
+    .then(success(res))
+    .catch(next)
+
+export const updateAddresses = ({ bodymen: { body }, params, user }, res, next) =>
   User.findById(params.id === 'me' ? user.id : params.id)
     .then(notFound(res))
     .then((result) => {
