@@ -23,7 +23,7 @@ const config = {
   all: {
     env: process.env.NODE_ENV || 'development',
     root: path.join(__dirname, '..'),
-    port: process.env.PORT || 8080,
+    port: process.env.PORT || 9090,
     ip: process.env.IP || '0.0.0.0',
     apiRoot: process.env.API_ROOT || '',
     defaultEmail: 'no-reply@jewelshop-back.com',
@@ -42,7 +42,7 @@ const config = {
   },
   production: {
     ip: process.env.IP || undefined,
-    port: process.env.PORT || 8080,
+    port: process.env.PORT || 9090,
     mongo: {
       uri: process.env.MONGODB_URI || 'mongodb+srv://admin:admin@cluster0-stprz.mongodb.net/jewelshop-back?retryWrites=true&w=majority'
     }

@@ -55,3 +55,24 @@ export const getCart = ({ bodymen: { body } }, res, next) =>
     .then((products) => products.map((product) => product.view()))
     .then(success(res))
     .catch(next)
+
+// Helper function
+export const buyProducts = (res, next, orderID, ipnID, stripeID) => {
+  Order.findById(orderID)
+    .then(notFound(res))
+    .then((orderFound) => {
+      orderFound.items.forEach((item) => {
+        Product.updateOne({ _id: item.product, 'variations._id': item.variation }, { $inc: { 'variations.$.stock': item.quantity * (-1) } }) // This query reduces the stock by the customerr's bought quantity
+          .then((result) => 'Updated')
+      })
+      if (ipnID) {
+        Order.updateOne({ _id: orderID }, { $set: { ipn: ipnID }})
+          .then((result) => 'Updated')
+      } else if (stripeID) {
+        Order.updateOne({ _id: orderID }, { $set: { stripeEvent: stripeID }})
+        .then((result) => 'Updated')
+      }
+      
+    })
+    .catch(next)
+}
