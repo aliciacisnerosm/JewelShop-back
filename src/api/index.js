@@ -6,6 +6,8 @@ import product from './product'
 import category from './category'
 import reviews from './reviews'
 import order from './order'
+import stripeEvent from './stripe-event'
+import ipn from './ipn'
 
 const router = new Router()
 
@@ -39,5 +41,7 @@ router.use('/products', product)
 router.use('/categories', category)
 router.use('/reviews', reviews)
 router.use('/orders', order)
+router.use('/stripe-events', stripeEvent)
+router.use('/ipns', ipn)
 
 export default router
