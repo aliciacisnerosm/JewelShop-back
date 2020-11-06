@@ -34,7 +34,7 @@ const config = {
   test: { },
   development: {
     mongo: {
-      uri: 'mongodb://localhost/jewelshop-back-dev',
+      uri: 'mongodb+srv://admin:admin@cluster0-stprz.mongodb.net/jewelshop-back?retryWrites=true&w=majority', //'mongodb://localhost/jewelshop-back-dev',
       options: {
         debug: true
       }
@@ -44,7 +44,7 @@ const config = {
     ip: process.env.IP || undefined,
     port: process.env.PORT || 9090,
     mongo: {
-      uri: process.env.MONGODB_URI || 'mongodb://localhost/jewelshop-back'
+      uri: process.env.MONGODB_URI || 'mongodb+srv://admin:admin@cluster0-stprz.mongodb.net/jewelshop-back?retryWrites=true&w=majority'
     }
   }
 }
