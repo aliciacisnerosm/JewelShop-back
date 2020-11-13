@@ -4,8 +4,8 @@ import { Product } from '../product'
 import axios from 'axios'
 import qs from 'qs'
 
-export const create = ({ bodymen: { body } }, res, next) =>
-  Order.create(body)
+export const create = ({ user, bodymen: { body } }, res, next) =>
+  Order.create({ ...body, createdBy: user })
     .then((order) => order.view(true))
     .then(success(res, 201))
     .catch(next)
