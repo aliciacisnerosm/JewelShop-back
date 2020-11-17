@@ -67,6 +67,103 @@ export const destroy = ({ params }, res, next) =>
     .then(success(res, 204))
     .catch(next)
 
+export const week1 = ({ params},res, next) =>
+  Order.find({createdAt: {$gte: new Date(new Date() - 7 * 60 * 60 * 24 * 1000)}})
+    .populate('createdBy')
+    .populate('items.product')
+    .then(notFound(res))
+    .then((order) => {
+      var dict = new Object();
+      if (order.length == 0) {
+        return 0;
+      } 
+      let totalweek1 = 0;
+      order.forEach(item => {
+        item.items.forEach(prod => {
+          dict[prod.product.name] ? dict[prod.product.name] += 1 : dict[prod.product.name] = 1;
+        })
+        totalweek1 += item.subtotal;
+      })
+      res.send({ totalSales: totalweek1, products: dict});
+
+      return totalweek1;
+    })
+    .then(success(res))
+    .catch(next)
+
+export const week2 = ({ params},res, next) =>
+  Order.find({createdAt: {$gte: new Date(new Date() - 14 * 60 * 60 * 24 * 1000), $lte: new Date(new Date() - 7 * 60 * 60 * 24 * 1000) }})
+    .populate('createdBy')
+    .populate('items.product')
+    .then(notFound(res))
+    .then((order) => {
+      var dict = new Object();
+      if (order.length == 0) {
+        return 0;
+      } 
+      let totalweek1 = 0;
+      order.forEach(item => {
+        item.items.forEach(prod => {
+          console.log(prod)
+          dict[prod.product.name] ? dict[prod.product.name] += 1 : dict[prod.product.name] = 1;
+        })
+        totalweek1 += item.subtotal;
+      })
+      res.send({ totalSales: totalweek1, products: dict});
+
+      return totalweek1;
+    })
+    .then(success(res))
+    .catch(next)
+
+export const week3 = ({ params},res, next) =>
+  Order.find({createdAt: {$gte: new Date(new Date() - 21 * 60 * 60 * 24 * 1000), $lte: new Date(new Date() - 14 * 60 * 60 * 24 * 1000) }})
+    .populate('createdBy')
+    .populate('items.product')
+    .then(notFound(res))
+    .then((order) => {
+      var dict = new Object();
+      if (order.length == 0) {
+        return 0;
+      } 
+      let totalweek1 = 0;
+      order.forEach(item => {
+        item.items.forEach(prod => {
+          dict[prod.product.name] ? dict[prod.product.name] += 1 : dict[prod.product.name] = 1;
+        })
+        totalweek1 += item.subtotal;
+      })
+      res.send({ totalSales: totalweek1, products: dict});
+
+      return totalweek1;
+    })
+    .then(success(res))
+    .catch(next)
+
+export const week4 = ({ params},res, next) =>
+  Order.find({createdAt: {$gte: new Date(new Date() - 28 * 60 * 60 * 24 * 1000), $lte: new Date(new Date() - 21 * 60 * 60 * 24 * 1000) }})
+    .populate('createdBy')
+    .populate('items.product')
+    .then(notFound(res))
+    .then((order) => {
+      var dict = new Object();
+      if (order.length == 0) {
+        return 0;
+      } 
+      let totalweek1 = 0;
+      order.forEach(item => {
+        item.items.forEach(prod => {
+          dict[prod.product.name] ? dict[prod.product.name] += 1 : dict[prod.product.name] = 1;
+        })
+        totalweek1 += item.subtotal;
+      })
+      res.send({ totalSales: totalweek1, products: dict});
+
+      return totalweek1;
+    })
+    .then(success(res))
+    .catch(next)
+
 export const calculatePrice = ({ params }, res, next) =>
   Order.findById(params.id)
     .populate('items.product')
