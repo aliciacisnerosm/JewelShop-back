@@ -42,6 +42,17 @@ export const show = ({ user, params }, res, next) =>
     .catch(next)
 
 export const showOrdersByUser = ({ user, params }, res, next) =>
+  Order.find({ createdBy: params.userId})
+    .populate('createdBy')
+    .then(notFound(res))
+    .then(authorOrAdmin(res, user, 'createdBy'))
+    .then((orders) => {
+      return orders.filter((order) => order ? order.view() : null)})
+    .then(success(res))
+    .catch(next)
+
+/*
+export const showOrdersByUser = ({ user, params }, res, next) =>
   Order.find({ createdBy: params.userId })
     .populate('createdBy')
     .then(notFound(res))
@@ -50,6 +61,7 @@ export const showOrdersByUser = ({ user, params }, res, next) =>
       return orders.filter((order) => order.ipn || order.stripeEvent ? order.view() : null)})
     .then(success(res))
     .catch(next)
+*/
 
 export const update = ({ bodymen: { body }, params }, res, next) =>
   Order.findById(params.id)
