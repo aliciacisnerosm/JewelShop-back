@@ -84,9 +84,7 @@ export const week1 = ({ params},res, next) =>
         })
         totalweek1 += item.subtotal;
       })
-      res.send({ totalSales: totalweek1, products: dict});
-
-      return totalweek1;
+      return { totalSales: totalweek1, products: dict};
     })
     .then(success(res))
     .catch(next)
@@ -109,9 +107,7 @@ export const week2 = ({ params},res, next) =>
         })
         totalweek1 += item.subtotal;
       })
-      res.send({ totalSales: totalweek1, products: dict});
-
-      return totalweek1;
+      return { totalSales: totalweek1, products: dict};
     })
     .then(success(res))
     .catch(next)
@@ -133,9 +129,7 @@ export const week3 = ({ params},res, next) =>
         })
         totalweek1 += item.subtotal;
       })
-      res.send({ totalSales: totalweek1, products: dict});
-
-      return totalweek1;
+      return { totalSales: totalweek1, products: dict};
     })
     .then(success(res))
     .catch(next)
@@ -157,9 +151,7 @@ export const week4 = ({ params},res, next) =>
         })
         totalweek1 += item.subtotal;
       })
-      res.send({ totalSales: totalweek1, products: dict});
-
-      return totalweek1;
+      return { totalSales: totalweek1, products: dict};
     })
     .then(success(res))
     .catch(next)
