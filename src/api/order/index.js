@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { middleware as query } from 'querymen'
 import { middleware as body } from 'bodymen'
 import { token } from '../../services/passport'
-import { create, index, show, showOrdersByUser, update, destroy, calculatePrice } from './controller'
+import { create, index, show, showOrdersByUser, update, destroy, calculatePrice, week1, week2, week3, week4 } from './controller'
 import { schema } from './model'
 export Order, { schema } from './model'
 
@@ -40,6 +40,38 @@ router.get('/',
   token({ required: true, roles: ['admin'] }),
   query(),
   index)
+/**
+ * @api {get} /orders/:id Retrieve order
+ * @apiName RetrieveOrder
+ * @apiGroup Order
+ * @apiSuccess {Object} order Order's data.
+ * @apiError {Object} 400 Some parameters may contain invalid values.
+ * @apiError 404 Order not found.
+ */
+
+router.get('/week1',
+  token({ required: true, roles: ['admin', 'user'] }),
+  query(),
+  week1
+)
+
+router.get('/week2',
+  token({ required: true, roles: ['admin', 'user'] }),
+  query(),
+  week2
+)
+
+router.get('/week3',
+  token({ required: true, roles: ['admin', 'user'] }),
+  query(),
+  week3
+)
+
+router.get('/week4',
+  token({ required: true, roles: ['admin', 'user'] }),
+  query(),
+  week4
+)
 
 /**
  * @api {get} /orders/:id Retrieve order
